@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../AuthProvider";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import axios from "axios";
 const SignIn = () => {
     const { userSignIn, user, setUser } = useContext(AuthContext);
 
@@ -19,17 +20,10 @@ const SignIn = () => {
                 const lastSignIn = creator?.metadata?.lastSignInTime;
                 console.log(lastSignIn);
                 const updatedUser = { email, lastSignIn };
-                fetch('http://localhost:3000/users', {
-                    method: 'PATCH',
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedUser)
-                })
-                    .then(res => res.json())
+                axios.patch('http://localhost:3000/users', updatedUser)
                     .then(data => {
-                        console.log('user created to db', data);
-                        if (data.insertedId) {
+                        console.log(data.data);
+                        if (data.data.modifiedCount) {
                             Swal.fire({
                                 text: 'User added successfully',
                                 icon: "success",
@@ -37,6 +31,24 @@ const SignIn = () => {
                             });
                         }
                     })
+                // fetch('http://localhost:3000/users', {
+                //     method: 'PATCH',
+                //     headers: {
+                //         'content-type': 'application/json'
+                //     },
+                //     body: JSON.stringify(updatedUser)
+                // })
+                //     .then(res => res.json())
+                //     .then(data => {
+                //         console.log('user created to db', data);
+                //         if (data.insertedId) {
+                //             Swal.fire({
+                //                 text: 'User added successfully',
+                //                 icon: "success",
+                //                 confirmButtonText: 'Ok'
+                //             });
+                //         }
+                //     })
             })
             .catch((err) => {
                 console.log(err.code)
@@ -66,7 +78,7 @@ const SignIn = () => {
                         </div>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign In</button>
-            
+
                         </div>
                         <p>Have a new Drinker? <Link to='/signup'>Sign Up</Link></p>
                     </form>

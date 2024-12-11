@@ -18,7 +18,7 @@ const Coffee = ({ coffee, loadedCoffees, setLoadedCoffees }) => {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                fetch(`http://localhost:5000/coffee/${_id}`, {
+                fetch(`http://localhost:3000/coffee/${_id}`, {
                     method: 'DELETE'
                 })
                     .then(res => res.json())

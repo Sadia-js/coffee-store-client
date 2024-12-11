@@ -11,6 +11,11 @@ import AuthProvider from './AuthProvider.jsx'
 import Layout from './components/Layout.jsx'
 import Home from './components/Home.jsx'
 import Users from './components/Users.jsx'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import Users2 from './components/Users2.jsx'
 
 const router = createBrowserRouter([
   {
@@ -46,12 +51,20 @@ const router = createBrowserRouter([
     element: <Users></Users>,
     loader: () => fetch('http://localhost:3000/users')
   },
+  {
+    path: "/users2",
+    element: <Users2></Users2>,
+  },
 ])
+
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

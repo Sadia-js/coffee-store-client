@@ -1,12 +1,31 @@
-import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
-const users = () => {
-    const userData = useLoaderData();
-    // console.log(userData)
-    const [users, setUsers] = useState(userData);
-    console.log(users)
+const Users2 = () => {
+    const {isPending, data : users,  isError, error} = useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:3000/users');
+            return res.json();
+        }
+    })
+    if(isPending){
+        return <span className="loading loading-spinner text-error"></span>;
+    }
+    if (isError) {
+        return <span>Error: {error.message}</span>
+      }
+    // const [users, setusers] = useState([]);
+
+    // useEffect(() => {
+    //     fetch('http://localhost:3000/users')
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         setusers(data)
+    //         console.log(data)
+    //     })
+    //     .catch(err => console.log(err.code));
+    // }, [])
 
     const deleteHandling = (id) => {
         Swal.fire({
@@ -33,9 +52,9 @@ const users = () => {
                                 text: "User has been deleted.",
                                 icon: "success"
                             });
-                            const remaining = users.filter(user => user._id !== id);
-                            setUsers(remaining);
-                            console.log(remaining)
+                            // const remaining = users.filter(user => user._id !== id);
+                            // setUsers(remaining);
+                            // console.log(remaining)
                         }
                     })
             }
@@ -43,7 +62,7 @@ const users = () => {
     }
     return (
         <div className='max-w-6xl mx-auto'>
-            <h2>Users : {users.length}</h2>
+            {/* <h2>Users : {users.length}</h2> */}
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
@@ -79,4 +98,4 @@ const users = () => {
     );
 };
 
-export default users;
+export default Users2;
